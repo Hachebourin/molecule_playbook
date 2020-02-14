@@ -1,0 +1,8 @@
+---
+- name: Prepare
+  hosts: all
+  become: true
+  tasks:
+    - name: "MOLECULE | inventory hostname"
+      debug:
+        var: inventory_hostname

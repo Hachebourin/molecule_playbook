@@ -1,0 +1,10 @@
+---
+# oracle/molecule/resources/playbooks
+- import_playbook: ../../../main.yml
+  # vars for import_playbook statements must be specified as a dictionary
+  vars: {
+          oracle_prerequis: true,
+          oracle_binaries_install_standalone_server: true,
+          oracle_config_server_standalone: true,
+          oracle_no_log_users_passwords: false
+        }

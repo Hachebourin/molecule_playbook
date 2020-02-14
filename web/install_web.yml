@@ -1,0 +1,27 @@
+---
+
+- name: "Affichage group vars pour le groupe web"
+  hosts: web
+  become: true
+  tasks:
+    - name: "Debug group_vars"
+      debug:
+        msg:
+          - "playbook_web > inventory_web > playbook_all > inventory_all"
+          - "vars_inventory_group_vars_all: {{ vars_inventory_group_vars_all }}"
+          - "vars_playbook_group_vars_all: {{ vars_playbook_group_vars_all }}"
+          - "vars_inventory_group_vars_web: {{ vars_inventory_group_vars_web }}"
+          - "vars_playbook_group_vars_web: {{ vars_playbook_group_vars_web }}"
+
+- name: "Affichage group vars pour le groupe other"
+  hosts: other
+  become: true
+  tasks:
+    - name: "Debug group_vars"
+      debug:
+        msg:
+          - "playbook_web > inventory_web > playbook_all > inventory_all"
+          - "vars_inventory_group_vars_all: {{ vars_inventory_group_vars_all }}"
+          - "vars_playbook_group_vars_all: {{ vars_playbook_group_vars_all }}"
+          - "vars_inventory_group_vars_web: {{ vars_inventory_group_vars_web }}"
+          - "vars_playbook_group_vars_web: {{ vars_playbook_group_vars_web }}"

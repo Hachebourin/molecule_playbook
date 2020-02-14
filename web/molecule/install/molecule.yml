@@ -1,0 +1,84 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: ${MOLECULE_PROJECT_DIRECTORY}/molecule/resources/requirements/requirements.yml
+driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  - name: centos-6.6-web
+    image: "lsp-centos:6.6"
+    registry:
+      url: "artifactory-principale.enedis.fr:9822"
+    disable_cache: true
+    privileged: true
+    volume_mounts:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+    dockerfile: ../resources/dockerfiles/Dockerfile.j2
+    groups:
+      - web
+
+  - name: centos-6.6-other
+    image: "lsp-centos:6.6"
+    registry:
+      url: "artifactory-principale.enedis.fr:9822"
+    disable_cache: true
+    privileged: true
+    volume_mounts:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+    dockerfile: ../resources/dockerfiles/Dockerfile.j2
+    groups:
+      - other
+
+provisioner:
+  name: ansible
+  inventory:
+    links:
+      # hosts: ../../inventory/hosts
+      group_vars: ../../inventory/group_vars/
+      host_vars: ../../inventory/host_vars/
+    group_vars:
+      # Molecule automatically generates the inventory based on the hosts defined under Platforms.
+      all:
+
+        # from 'common' equivalent inventory
+        # TODO tester avec la copie des valeurs de common/group_vars/all dans l'inventaire molecule ?
+        oracle_group: "oinstall"
+  log: True
+  options:
+    vv: false
+  config_options:
+    defaults:
+      callback_whitelist: profile_tasks
+  lint:
+    name: ansible-lint
+  playbooks:
+    prepare: ../resources/playbooks/prepare-install.yml
+    converge: ../resources/playbooks/playbook-install.yml
+  env:
+    ANSIBLE_VAULT_PASSWORD_FILE: "~/vault.key"
+    # Les "modules-roles" sont poses dans ".molecule/roles/" (ex. : ".molecule/roles/module_oracle")
+    #ANSIBLE_LIBRARY: ${ANSIBLE_LIBRARY}:${MOLECULE_EPHEMERAL_DIRECTORY}/roles
+
+scenario:
+  name: install
+  test_sequence:
+    - dependency
+#    - lint
+    - syntax
+    - create
+    - prepare
+    - converge
+#    - check
+    - verify
+#    - destroy
+verifier:
+  name: testinfra
+  directory: ../resources/tests/install
+  options:
+    verbose: true
+    s: true
+  lint:
+    name: flake8

@@ -1,0 +1,5 @@
+---
+
+- import_playbook: install_web.yml
+  when: web_install | default(true)
+  tags: web::install

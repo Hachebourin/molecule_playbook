@@ -1,0 +1,6 @@
+---
+
+vars_inventory_group_vars_all: "inventory_all_value"
+vars_playbook_group_vars_all: "inventory_all_value"
+vars_inventory_group_vars_web: "inventory_all_value"
+vars_playbook_group_vars_web: "inventory_all_value"
